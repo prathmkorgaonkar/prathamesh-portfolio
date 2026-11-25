@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { submitContact, type ContactInput } from "../../api/contact.api";
+import { submitContact } from "../../api/contact.api";
+import type { ContactInput } from "../../types/contact";
 
 const Contact = () => {
   // State must be INSIDE the component
