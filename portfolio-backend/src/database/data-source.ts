@@ -1,4 +1,4 @@
-
+import "dotenv/config";
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import path from "node:path";
@@ -15,8 +15,14 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD || "password",
     database: process.env.DB_DATABASE || "portfolio_db",
 
+    ssl:
+        process.env.DB_SSL === "true"
+            ? { rejectUnauthorized: false }
+            : false,
+
     synchronize: false,
     logging: false,
+
 
     entities: [
         path.join(__dirname, "entities", "*.{js,ts}"),
