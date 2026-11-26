@@ -4,12 +4,7 @@ import type { ChangeEvent, FormEvent } from "react";
 
 import type { Skill, SkillInput } from "../../types/skill";
 
-import {
-  getAllSkills,
-  createSkill,
-  updateSkill,
-  deleteSkill,
-} from "../../api/skill.api";
+import { getAllSkills, createSkill, updateSkill, deleteSkill } from "../../api/skill.api";
 
 interface SkillFormData {
   name: string;
@@ -41,16 +36,22 @@ const SkillsManagement = () => {
   const [formData, setFormData] =
     useState<SkillFormData>(initialFormData);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
+
   // Fetch skills
   useEffect(() => {
     let isMounted = true;
 
     const loadSkills = async () => {
       try {
-        const response = await getAllSkills();
+        const response = await getAllSkills({ page: 1, limit, });
 
         if (isMounted) {
           setSkills(response.data);
+          setCurrentPage(response.pagination.page);
+          setTotalPages(response.pagination.totalPages);
         }
       } catch (err) {
         console.error("Skills fetch error:", err);
@@ -72,10 +73,24 @@ const SkillsManagement = () => {
     };
   }, []);
 
+  // Automatically dismiss success message after 2 seconds
+  useEffect(() => {
+    if (!success) return;
+
+    const timer = setTimeout(() => {
+      setSuccess("");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [success]);
+
   // Refresh skills
-  const fetchSkills = async () => {
-    const response = await getAllSkills();
+  const fetchSkills = async (pageNumber = currentPage) => {
+    const response = await getAllSkills({ page: pageNumber, limit, });
+
     setSkills(response.data);
+    setCurrentPage(response.pagination.page);
+    setTotalPages(response.pagination.totalPages);
   };
 
   // Handle input changes
@@ -419,11 +434,10 @@ const SkillsManagement = () => {
 
                   <td className="px-4 py-4">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        skill.isActive
-                          ? "bg-green-100 text-green-700"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${skill.isActive
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-200 text-gray-700"
+                        }`}
                     >
                       {skill.isActive ? "Active" : "Inactive"}
                     </span>
@@ -453,6 +467,32 @@ const SkillsManagement = () => {
             )}
           </tbody>
         </table>
+      </div>
+      {/* Pagination */}
+      <div className="mt-6 flex items-center justify-between">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Page {currentPage} of {totalPages}
+        </p>
+
+        <div className="flex gap-3">
+          <button
+            type="button"
+            disabled={currentPage === 1}
+            onClick={() => fetchSkills(currentPage - 1)}
+            className="rounded-lg bg-gray-200 px-4 py-2 text-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-white"
+          >
+            Previous
+          </button>
+
+          <button
+            type="button"
+            disabled={currentPage === totalPages}
+            onClick={() => fetchSkills(currentPage + 1)}
+            className="rounded-lg bg-blue-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

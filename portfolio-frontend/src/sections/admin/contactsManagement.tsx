@@ -79,6 +79,17 @@ const ContactsManagement = () => {
     };
   }, [page, limit, search, filter]);
 
+  // Automatically dismiss success message after 2 seconds
+  useEffect(() => {
+    if (!success) return;
+
+    const timer = setTimeout(() => {
+      setSuccess("");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [success]);
+  
   // Open contact details
   const handleViewContact = async (id: string) => {
     try {
@@ -311,11 +322,10 @@ const ContactsManagement = () => {
 
                   <td className="px-4 py-4">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        contact.isRead
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${contact.isRead
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
-                      }`}
+                        }`}
                     >
                       {contact.isRead ? "Read" : "Unread"}
                     </span>

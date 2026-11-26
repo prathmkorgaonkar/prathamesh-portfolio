@@ -46,20 +46,22 @@ const Projects = () => {
         </h2>
 
         {/* Project Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex gap-8 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth">
 
           {projects.map((project) => (
             <div
               key={project.id}
               className="
-            rounded-xl
-            border border-gray-200 dark:border-gray-700
-            bg-white dark:bg-gray-900
-            overflow-hidden
-            shadow-sm hover:shadow-xl
-            transition-all duration-300
-          "
-            >
+                        flex-none
+                        w-[85%] sm:w-[70%] lg:w-[calc((100%-4rem)/3)]
+                        snap-start
+                        rounded-xl
+                        border border-gray-200 dark:border-gray-700
+                        bg-white dark:bg-gray-900
+                        overflow-hidden
+                        shadow-sm hover:shadow-xl
+                        transition-all duration-300
+                      ">
 
               {/* {project.imageUrl && (
                 <img

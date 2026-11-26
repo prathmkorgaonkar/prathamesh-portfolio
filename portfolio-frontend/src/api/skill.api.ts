@@ -2,9 +2,19 @@
 import type { SkillInput, SkillResponse } from "../types/skill";
 import axiosInstance from "./axiosInstance";
 
-// Get all skills
-export const getAllSkills = async (): Promise<SkillResponse> => {
-  const response = await axiosInstance.get<SkillResponse>("/skills");
+// Get all skills with pagination
+export const getAllSkills = async (params?: { page?: number; limit?: number; }): Promise<SkillResponse> => {
+  const response = await axiosInstance.get<SkillResponse>(
+    "/skills",
+    { params }
+  );
+  return response.data;
+};
+
+// Public: Get all skills for portfolio
+export const getPublicSkills = async (): Promise<SkillResponse> => {
+  const response = await axiosInstance.get<SkillResponse>(
+    "/skills", { params: { page: 1, limit: 100, }, });
   return response.data;
 };
 

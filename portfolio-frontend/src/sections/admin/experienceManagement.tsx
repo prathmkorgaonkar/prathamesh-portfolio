@@ -82,6 +82,17 @@ const ExperienceManagement = () => {
     };
   }, []);
 
+  // Automatically dismiss success message after 2 seconds
+  useEffect(() => {
+    if (!success) return;
+
+    const timer = setTimeout(() => {
+      setSuccess("");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [success]);
+
   // Refresh experiences
   const fetchExperiences = async () => {
     const response = await getAllExperiences();
@@ -506,11 +517,10 @@ const ExperienceManagement = () => {
 
                   <td className="px-4 py-4">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        experience.isCurrent
+                      className={`rounded-full px-3 py-1 text-xs font-medium ${experience.isCurrent
                           ? "bg-green-100 text-green-700"
                           : "bg-gray-200 text-gray-700"
-                      }`}
+                        }`}
                     >
                       {experience.isCurrent ? "Current" : "Previous"}
                     </span>

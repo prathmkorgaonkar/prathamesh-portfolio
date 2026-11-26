@@ -77,6 +77,17 @@ const ProjectsManagement = () => {
         };
     }, []);
 
+    // Automatically dismiss success message after 2 seconds
+    useEffect(() => {
+        if (!success) return;
+
+        const timer = setTimeout(() => {
+            setSuccess("");
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }, [success]);
+
     // Reusable project fetching function
     const fetchProjects = async () => {
         try {
@@ -426,7 +437,7 @@ const ProjectsManagement = () => {
                             onClick={() => {
                                 setEditingProjectId(null);
                                 setFormData({ ...initialFormData });
-                                setShowForm(true);
+                                setShowForm(false);
                                 setError("");
                                 setSuccess("");
                             }}
@@ -440,7 +451,7 @@ const ProjectsManagement = () => {
 
             {/* Projects Table */}
             <div className="overflow-x-auto rounded-xl bg-white p-5 shadow-sm dark:bg-gray-900">
-                <table className="w-full text-left">
+                <table className="w-full min-w-[1000px] text-left">
                     <thead>
                         <tr className="border-b text-sm text-gray-500 dark:border-gray-700">
                             <th className="px-4 py-3">Project</th>
@@ -483,9 +494,9 @@ const ProjectsManagement = () => {
 
                                     <td className="px-4 py-4">
                                         <span
-                                            className={`rounded-full px-3 py-1 text-xs font-medium ${project.featured
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-gray-200 text-gray-700"
+                                            className={`inline-flex items-center whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium ${project.featured
+                                                    ? "bg-green-100 text-green-700"
+                                                    : "bg-gray-200 text-gray-700"
                                                 }`}
                                         >
                                             {project.featured ? "Featured" : "Not Featured"}

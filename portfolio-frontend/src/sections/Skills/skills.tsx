@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Skill } from "../../types/skill";
-import { getAllSkills } from "../../api/skill.api";
+import { getPublicSkills } from "../../api/skill.api";
 
 const Skills = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -10,7 +10,7 @@ const Skills = () => {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await getAllSkills();
+        const response = await getPublicSkills();
         setSkills(response.data);
       } catch (err) {
         console.error("Failed to fetch skills:", err);
@@ -65,56 +65,45 @@ const Skills = () => {
           Technical Skills
         </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
+        <div
+          className="columns-1 md:columns-2 lg:columns-3"
+          style={{ columnGap: "2rem" }}
+        >
           {Object.entries(groupedSkills).map(([category, categorySkills]) => (
             <div
               key={category}
-              className="rounded-xl p-6 border border-gray-200
-                dark:border-gray-700 bg-white dark:bg-gray-900"
+              className="mb-8 w-full break-inside-avoid inline-block rounded-xl
+        p-6 border border-gray-200 dark:border-gray-700
+        bg-white dark:bg-gray-900"
             >
-              <h3 className="text-xl font-semibold mb-6
-                text-gray-900 dark:text-white"
-              >
+              <h3 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
                 {category}
               </h3>
 
               <div className="space-y-5">
                 {categorySkills.map((skill) => (
                   <div key={skill.id}>
-
                     <div className="flex justify-between mb-2">
-                      <span className="font-medium text-gray-700
-                        dark:text-gray-200"
-                      >
+                      <span className="font-medium text-gray-700 dark:text-gray-200">
                         {skill.name}
                       </span>
 
-                      <span className="text-sm text-gray-500
-                        dark:text-gray-400"
-                      >
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         {skill.proficiency}%
                       </span>
                     </div>
 
-                    <div className="w-full h-2 rounded-full
-                      bg-gray-200 dark:bg-gray-700"
-                    >
+                    <div className="w-full h-2 rounded-full bg-gray-200 dark:bg-gray-700">
                       <div
-                        className="h-2 rounded-full bg-blue-600
-                          dark:bg-blue-400 transition-all duration-500"
-                        style={{
-                          width: `${skill.proficiency}%`,
-                        }}
+                        className="h-2 rounded-full bg-blue-600 dark:bg-blue-400 transition-all duration-500"
+                        style={{ width: `${skill.proficiency}%` }}
                       />
                     </div>
-
                   </div>
                 ))}
               </div>
             </div>
           ))}
-
         </div>
 
         {skills.length === 0 && (
